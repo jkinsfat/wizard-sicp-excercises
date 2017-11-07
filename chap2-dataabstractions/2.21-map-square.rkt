@@ -15,12 +15,12 @@
 (define (map proc list)
   (if (null? list)
     '()
-    (cons ((proc car list) 
+    (cons ((proc (car list))
            (map proc (cdr list))))))
 
 (define (square-list items)
   (if (null? items)
-    nil
+    '()
     (cons (expt items 2) (square-list (cdr items)))))
 
 (define (square-list items)
