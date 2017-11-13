@@ -1,0 +1,16 @@
+(define  tolerance 0.00001)
+(define (fixed-point f first-guess)
+  (define (close-enough? a b)
+    (< (abs(- a b)) tolerance))
+  (define (try guess)
+    (let ((next (f guess))))
+    (newline)(display 'next guess is')(display next)
+    (newline)(display 'approximation: ') (display (- guess next))
+    (if (close-enough? guess next)
+      guess
+      (try next)))
+  (try first-guess)
+
+(define (x-to-x y)
+  (fixed-point (lambda (x)
+    (/ (log x) (log y))) 10.0))

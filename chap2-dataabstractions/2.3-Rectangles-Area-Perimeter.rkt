@@ -22,6 +22,7 @@
 (define (end-segment segment)
   (cdr segment))
 
+; Oh this doesn't get distance at all, need to use pythagorean theorm >.>
 (define (distance segment) 
   (sqrt (+ (expt (- (x-point (start-segment segment)) (x-point (end-segment segment)))
                  2)
