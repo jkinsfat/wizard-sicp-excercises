@@ -5,13 +5,13 @@
 ; that anything raised to the power 0 is 1 and anything raised to the power 1 is the thing itself.
 (define (variable? exp) (symbol? exp))
 (define (same-variable? v1 v2) (eq? v1 v2))
-(define (equal-number? value num) (and (number? n) (= value num)))
+(define (equal-number? value num) (and (number? value) (= value num)))
 
 (define (make-sum a1 a2)
   (cond ((equal-number? a1 0) a2)
         ((equal-number? a2 0) a1)
         ((and (number? a1) (number? a2)) (+ a1 a2))
-        ((else (list '+ a1 a2)))))
+        (else (list '+ a1 a2))))
 
 (define (sum? exp) (and (pair? exp) (eq? (car exp) '+)))
 (define (addend sum) (cadr sum))
@@ -19,12 +19,12 @@
 
 (define (make-product a1 a2)
   (cond ((or (equal-number? a1 0) (equal-number? a2 0)) 0)
-        ((=number? a1 1) a2)
-        ((=number? a2 1) a1))
+        ((equal-number? a1 1) a2)
+        ((equal-number? a2 1) a1)
         ((and (number? a1) (number? a2)) (* a1 a2))
-        ((else (list '* a1 a2))))
+        (else (list '* a1 a2)))
 
-(define (product? exp) (and (pair? exp) (eq? (car exp) 'expt)))
+(define (product? exp) (and (pair? exp) (eq? (car exp) '*)))
 (define (multiplier product) (cadr product))
 (define (multiplicand product) (caddr product))
 

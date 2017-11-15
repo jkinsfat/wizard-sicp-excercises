@@ -4,18 +4,25 @@
 ; (deriv '(* x y (+ x 3)) 'x)
 
 ; Try to do this by changing only the representation for sums and products, without changing the deriv
-;  procedure at all. For example, the aiddend of a sum would be the first term, and the augend would be 
+;  procedure at all. For example, the addend of a sum would be the first term, and the augend would be 
 ;  the sum of the rest of the terms.
 
 (define (variable? exp) (symbol? exp))
 (define (same-variable? v1 v2) (eq? v1 v2))
-(define (equal-number? value num) (and (number? n) (= value num)))
+(define (equal-number? value num) (and (number? value) (= value num)))
 
-(define (make-sum a1 a2)
-  (cond ((equal-number? a1 0) a2)
-        ((equal-number? a2 0) a1)
-        ((and (number? a1) (number? a2)) (+ a1 a2))
-        ((else (list '+ a1 a2)))))
+;; I re-implemented make-sum to take an undefined number of arguments. 
+;; If there are more than 3 arguments given then it iterates through list of extra arguments by calling
+;; make-sum on them. 
+(define (make-sum a1 a2 . an)
+  (define (sum-help a1 a2)
+    (cond ((equal-number? a1 0) a2)
+      ((equal-number? a2 0) a1)
+      ((and (number? a1) (number? a2)) (+ a1 a2))
+      (else (list '+ a1 a2))))
+  (cond ((null? an) (sum-help a1 a2))
+        ((null? (cdr an)) (make-sum (car an) (sum-help a1 a2) ))
+        (else (make-sum (car an) (sum-help a1 a2) (cdr an)))))
 
 (define (sum? exp) (and (pair? exp) (eq? (car exp) '+)))
 (define (addend sum) (cadr sum))
@@ -23,12 +30,12 @@
 
 (define (make-product a1 a2)
   (cond ((or (equal-number? a1 0) (equal-number? a2 0)) 0)
-        ((=number? a1 1) a2)
-        ((=number? a2 1) a1))
+        ((equal-number? a1 1) a2)
+        ((equal-number? a2 1) a1)
         ((and (number? a1) (number? a2)) (* a1 a2))
-        ((else (list '* a1 a2))))
+        (else (list '* a1 a2)))
 
-(define (product? exp) (and (pair? exp) (eq? (car exp) 'expt)))
+(define (product? exp) (and (pair? exp) (eq? (car exp) '*)))
 (define (multiplier product) (cadr product))
 (define (multiplicand product) (caddr product))
 
