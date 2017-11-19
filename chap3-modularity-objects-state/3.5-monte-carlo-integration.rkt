@@ -58,16 +58,13 @@ The following random-in-range procedure implements this in terms of the random p
 (define unit-circle-predicate 
   (circle-predicate-maker 0 0 1))
 
-;Returns a procedure that generates a randomized coordinate point within a rectangle parallel
-; to the y and x axes and returns whether or not the point is in the unit circle 
-(define (unit-circle-test x1 x2 y1 y2)
-  (lambda () (unit-circle-predicate (random-in-range x1 x2) (random-in-range y1 y2))))
-
 ;Estimates the integral of a region of space described by predicate function p via a monte-carlo
-; simulation that performs a number of trials in which points within a rectangle defined by 
+; simulation that performs a number of trials in which random points within a rectangle defined by 
 ; opposing corner coordinates are tested against the predicate function. 
 (define (estimate-integral P x1 x2 y1 y2 trials)
-  (* (rect-area x1 x2 y1 y2) (monte-carlo trials P)))
+  (define experiment  
+    (lambda () (P (random-in-range x1 x2) (random-in-range y1 y2))))
+  (* (rect-area x1 x2 y1 y2) (monte-carlo trials experiment)))
 
 (define estimate-pi
-  (estimate-integral (unit-circle-test -1 1 -1 1) -1 1 -1 1 2000))
+  (estimate-integral unit-circle-predicate -1 1 -1 1 2000))
